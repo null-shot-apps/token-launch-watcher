@@ -24,7 +24,7 @@ export default function VolumeChart({ data }: VolumeChartProps) {
   const chartHeight = 200;
   const padding = 40;
   
-  const volumes = data.map(d => d.volume);
+  const volumes = data.map(d => d.buyVolume + d.sellVolume);
   const maxVolume = Math.max(...volumes);
   
   const formatVolume = (volume: number) => {
@@ -46,8 +46,8 @@ export default function VolumeChart({ data }: VolumeChartProps) {
     });
   };
 
-  const totalVolume = data.reduce((sum, point) => sum + point.volume, 0);
-  const totalBuys = data.reduce((sum, point) => sum + point.buys, 0);
+  const totalVolume = data.reduce((sum, point) => sum + point.buyVolume + point.sellVolume, 0);
+  const totalBuys = data.reduce((sum, point) => sum + point.buyVolume, 0);
   const buyRatio = (totalBuys / totalVolume) * 100;
 
   return (
@@ -98,8 +98,8 @@ export default function VolumeChart({ data }: VolumeChartProps) {
               const barWidth = (chartWidth - 2 * padding) / data.length * 0.8;
               const x = padding + (index / data.length) * (chartWidth - 2 * padding) + barWidth * 0.1;
               
-              const buyHeight = (point.buys / maxVolume) * (chartHeight - 2 * padding);
-              const sellHeight = (point.sells / maxVolume) * (chartHeight - 2 * padding);
+              const buyHeight = (point.buyVolume / maxVolume) * (chartHeight - 2 * padding);
+              const sellHeight = (point.sellVolume / maxVolume) * (chartHeight - 2 * padding);
               
               return (
                 <g key={index}>
@@ -166,4 +166,7 @@ export default function VolumeChart({ data }: VolumeChartProps) {
     </div>
   );
 }
+
+
+
 

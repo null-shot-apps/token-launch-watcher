@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { TokenFeed } from '@/components/TokenFeed';
 import { SearchBar } from '@/components/SearchBar';
-import { TokenDetailModal } from '@/components/TokenDetailModal';
+import TokenDetailModal from '@/components/TokenDetailModal';
 import { generateMockTokens, type Token } from '@/lib/mockData';
 
 export default function HomePage() {
@@ -109,6 +109,7 @@ export default function HomePage() {
     </div>
   );
 }
+
 
 
 

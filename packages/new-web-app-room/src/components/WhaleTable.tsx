@@ -87,7 +87,7 @@ export default function WhaleTable({ transactions }: WhaleTableProps) {
             </thead>
             <tbody>
               {transactions.slice(0, 10).map((tx) => (
-                <tr key={tx.id} className="border-b border-gray-800 hover:bg-gray-800/30 transition-colors">
+                <tr key={tx.hash} className="border-b border-gray-800 hover:bg-gray-800/30 transition-colors">
                   <td className="py-3 px-2">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       tx.type === 'buy' 
@@ -118,10 +118,10 @@ export default function WhaleTable({ transactions }: WhaleTableProps) {
                   <td className="py-3 px-2">
                     <button 
                       className="text-purple-400 hover:text-purple-300 font-mono text-sm transition-colors"
-                      onClick={() => navigator.clipboard.writeText(tx.txHash)}
+                      onClick={() => navigator.clipboard.writeText(tx.hash)}
                       title="Click to copy"
                     >
-                      {truncateTxHash(tx.txHash)}
+                      {truncateTxHash(tx.hash)}
                     </button>
                   </td>
                 </tr>
@@ -145,3 +145,5 @@ export default function WhaleTable({ transactions }: WhaleTableProps) {
     </div>
   );
 }
+
+
