@@ -1,3 +1,44 @@
+export interface Token {
+  address: string;
+  name: string;
+  symbol: string;
+  chain: string;
+  price: number;
+  priceChange24h: number;
+  volume24h: number;
+  marketCap: number;
+  liquidity: number;
+  holders: number;
+  launchTime: number;
+  ath: number;
+  atl: number;
+  buys24h: number;
+  sells24h: number;
+  liquidityChange24h: number;
+}
+
+export interface WhaleTransaction {
+  hash: string;
+  wallet: string;
+  type: 'buy' | 'sell';
+  amount: number;
+  value: number;
+  timestamp: number;
+  tokenSymbol: string;
+}
+
+export interface PricePoint {
+  timestamp: number;
+  price: number;
+}
+
+export interface VolumePoint {
+  timestamp: number;
+  buyVolume: number;
+  sellVolume: number;
+}
+
+// Legacy interface for backward compatibility
 export interface TokenData {
   name: string;
   symbol: string;
@@ -17,29 +58,103 @@ export interface TokenData {
   whaleTransactions: WhaleTransaction[];
 }
 
-export interface PricePoint {
-  timestamp: number;
-  price: number;
-  volume: number;
+const TOKEN_NAMES = [
+  'PepeCoin', 'DogeKing', 'MoonShot', 'RocketFuel', 'DiamondHands',
+  'ToTheMoon', 'SafeGem', 'CryptoKing', 'BullRun', 'LamboTime',
+  'HodlCoin', 'DegenGem', 'AlphaCoin', 'BetaToken', 'GammaGem',
+  'ShibaInu', 'FlokiCoin', 'BabyDoge', 'ElonMars', 'SafeMoon',
+  'ApeStrong', 'DiamondDoge', 'MoonWalk', 'RocketShip', 'LunarCoin'
+];
+
+const TOKEN_SYMBOLS = [
+  'PEPE', 'DOGE', 'MOON', 'FUEL', 'DIAMOND',
+  'TTM', 'SAFE', 'KING', 'BULL', 'LAMBO',
+  'HODL', 'DEGEN', 'ALPHA', 'BETA', 'GAMMA',
+  'SHIB', 'FLOKI', 'BABY', 'ELON', 'SAFEM',
+  'APE', 'DDOGE', 'WALK', 'SHIP', 'LUNAR'
+];
+
+const CHAINS = [
+  'ethereum', 'solana', 'bsc', 'polygon', 'arbitrum', 'base', 'monad'
+];
+
+export function generateMockTokens(count: number = 1): Token[] {
+  return Array.from({ length: count }, () => {
+    const nameIndex = Math.floor(Math.random() * TOKEN_NAMES.length);
+    const price = 0.000001 + Math.random() * 0.01;
+    const ath = price * (1.2 + Math.random() * 3);
+    const atl = price * (0.1 + Math.random() * 0.8);
+    const volume24h = 10000 + Math.random() * 1000000;
+    
+    return {
+      address: `0x${Math.random().toString(16).substr(2, 40)}`,
+      name: TOKEN_NAMES[nameIndex],
+      symbol: TOKEN_SYMBOLS[nameIndex],
+      chain: CHAINS[Math.floor(Math.random() * CHAINS.length)],
+      price,
+      priceChange24h: -50 + Math.random() * 100,
+      volume24h,
+      marketCap: 50000 + Math.random() * 10000000,
+      liquidity: 5000 + Math.random() * 500000,
+      holders: 10 + Math.floor(Math.random() * 1000),
+      launchTime: Date.now() - Math.random() * 60000, // Within last minute
+      ath,
+      atl,
+      buys24h: Math.floor(volume24h * 0.6 / price),
+      sells24h: Math.floor(volume24h * 0.4 / price),
+      liquidityChange24h: -20 + Math.random() * 40,
+    };
+  });
 }
 
-export interface VolumePoint {
-  timestamp: number;
-  volume: number;
-  buys: number;
-  sells: number;
+export function generateMockToken(): Token {
+  return generateMockTokens(1)[0];
 }
 
-export interface WhaleTransaction {
-  id: string;
-  type: 'buy' | 'sell';
-  amount: number;
-  value: number;
-  wallet: string;
-  timestamp: number;
-  txHash: string;
+export function generateMockWhaleTransactions(count: number = 10): WhaleTransaction[] {
+  return Array.from({ length: count }, () => ({
+    hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+    wallet: `0x${Math.random().toString(16).substr(2, 40)}`,
+    type: Math.random() > 0.5 ? 'buy' : 'sell',
+    amount: 1000 + Math.random() * 100000,
+    value: 1000 + Math.random() * 50000,
+    timestamp: Date.now() - Math.random() * 3600000,
+    tokenSymbol: TOKEN_SYMBOLS[Math.floor(Math.random() * TOKEN_SYMBOLS.length)],
+  }));
 }
 
+export function generateMockPriceHistory(hours: number = 1): PricePoint[] {
+  const points: PricePoint[] = [];
+  const basePrice = 0.000001 + Math.random() * 0.01;
+  const now = Date.now();
+  const interval = (hours * 60 * 60 * 1000) / 60; // 60 points per hour
+  
+  for (let i = 0; i < 60; i++) {
+    const timestamp = now - (59 - i) * interval;
+    const volatility = 0.95 + Math.random() * 0.1; // ±5% change
+    const price = i === 0 ? basePrice : points[i - 1].price * volatility;
+    points.push({ timestamp, price });
+  }
+  
+  return points;
+}
+
+export function generateMockVolumeHistory(hours: number = 1): VolumePoint[] {
+  const points: VolumePoint[] = [];
+  const now = Date.now();
+  const interval = (hours * 60 * 60 * 1000) / 60; // 60 points per hour
+  
+  for (let i = 0; i < 60; i++) {
+    const timestamp = now - (59 - i) * interval;
+    const buyVolume = Math.random() * 10000;
+    const sellVolume = Math.random() * 8000;
+    points.push({ timestamp, buyVolume, sellVolume });
+  }
+  
+  return points;
+}
+
+// Legacy function for backward compatibility
 export function generateDummyData(tokenAddress: string, chain: string): TokenData {
   const now = Date.now();
   const startTime = now - (60 * 60 * 1000); // 1 hour ago
@@ -61,12 +176,9 @@ export function generateDummyData(tokenAddress: string, chain: string): TokenDat
     const volatility = (Math.random() - 0.5) * 0.2; // ±20% change
     price = Math.max(price * (1 + volatility), 0.0001);
     
-    const volume = Math.random() * 100000 + 10000; // $10k - $110k volume per minute
-    
     priceHistory.push({
       timestamp,
-      price,
-      volume
+      price
     });
   }
   
@@ -79,9 +191,8 @@ export function generateDummyData(tokenAddress: string, chain: string): TokenDat
     
     volumeHistory.push({
       timestamp,
-      volume: totalVolume,
-      buys: totalVolume * buyRatio,
-      sells: totalVolume * (1 - buyRatio)
+      buyVolume: totalVolume * buyRatio,
+      sellVolume: totalVolume * (1 - buyRatio)
     });
   }
   
@@ -96,13 +207,13 @@ export function generateDummyData(tokenAddress: string, chain: string): TokenDat
     const value = amount * (basePrice * (0.8 + Math.random() * 0.4)); // Price variation
     
     whaleTransactions.push({
-      id: `whale-${i}`,
+      hash: generateTxHash(),
       type,
       amount,
       value,
       wallet: generateWalletAddress(),
       timestamp,
-      txHash: generateTxHash()
+      tokenSymbol: generateTokenSymbol()
     });
   }
   
@@ -162,3 +273,5 @@ function generateTxHash(): string {
   }
   return result;
 }
+
+
