@@ -1,8 +1,14 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --neon-cyan: #00ffff;
+  --neon-purple: #8b5cf6;
+  --neon-green: #00ff88;
+  --neon-pink: #ff0080;
+  --card-bg: #1a1a1a;
+  --border: #333333;
 }
 
 @theme inline {
@@ -10,13 +16,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 /* Non-scroll and full-height baseline */
@@ -147,3 +146,40 @@ body {
 .animate-bounce-horizontal {
   animation: bounce-horizontal 1.5s ease-in-out infinite;
 }
+
+/* Token Launch Watcher specific styles */
+.neon-glow {
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+.neon-text {
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+.gradient-border {
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-purple));
+  padding: 1px;
+  border-radius: 8px;
+}
+
+.gradient-border-inner {
+  background: var(--card-bg);
+  border-radius: 7px;
+  height: 100%;
+  width: 100%;
+}
+
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  from {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+  }
+}
+
+

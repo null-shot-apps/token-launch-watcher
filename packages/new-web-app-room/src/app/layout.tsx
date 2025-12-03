@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navigation from "@/components/Navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Build anything from a chat",
-  description: "Turn chats into apps. Prompt. Ship. Repeat.",
+  title: "Token Launch Watcher - Track New Token Launches",
+  description: "Monitor new token launches in real-time. Track price, liquidity, whale activity, and get alerts for the first critical 60 minutes.",
 };
 
 export default function RootLayout({
@@ -27,8 +28,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Navigation />
+        <main className="pt-16">
+          {children}
+        </main>
       </body>
     </html>
   );
 }
+
+
